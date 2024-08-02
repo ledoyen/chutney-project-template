@@ -4,8 +4,10 @@ group = "com.chutneytesting"
 version = "0.1.0-SNAPSHOT"
 description = "A GitHub project template to help you start with Chutney Kotlin DSL"
 
+val chutneyVersion = "2.9.0"
+
 plugins {
-    kotlin("jvm") version "1.8.22" apply true
+    kotlin("jvm") version "1.9.25" apply true
 }
 
 repositories {
@@ -13,9 +15,11 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
-    api("com.chutneytesting:chutney-kotlin-dsl:[2.0.0,)")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    api("org.jetbrains.kotlin:kotlin-stdlib:1.9.25")
+
+    implementation(enforcedPlatform("com.chutneytesting:chutney-parent:$chutneyVersion"))
+    api("com.chutneytesting:chutney-kotlin-dsl:$chutneyVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.withType<KotlinCompile> {
@@ -39,7 +43,7 @@ task("chutneyReportSite", JavaExec::class) {
 
 tasks {
     test {
-        systemProperty("chutney.environment.rootPath", "chutney_environments") // Default is .chutney/environments
+        systemProperty("chutney.environment.rootPath", "chutney/conf/environment") // Default is .chutney/environments
         systemProperty("chutney.report.rootPath", "build/reports/chutney")
         systemProperty("chutney.engine.stepAsTest", false)
         systemProperty("chutney.log.color.enabled", true)
@@ -47,4 +51,3 @@ tasks {
         finalizedBy("chutneyReportSite")
     }
 }
-

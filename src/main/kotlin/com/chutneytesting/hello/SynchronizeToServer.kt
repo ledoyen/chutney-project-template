@@ -1,5 +1,6 @@
 package com.chutneytesting.hello
 
+import com.chutneytesting.kotlin.synchronize.jsonSerialize
 import com.chutneytesting.kotlin.synchronize.synchronise
 import com.chutneytesting.kotlin.util.ChutneyServerInfo
 
@@ -8,5 +9,8 @@ val chutneyLocalServer = ChutneyServerInfo(
 )
 
 fun main() {
-    test_suite.forEach { it.synchronise(serverInfo = chutneyLocalServer, updateRemote = true) }
+    test_suite.forEach {
+        it.jsonSerialize("src/main/resources/chutney/in_progress")
+        it.synchronise(serverInfo = chutneyLocalServer)
+    }
 }

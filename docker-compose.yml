@@ -2,16 +2,9 @@ version: "3.9"
 services:
     chutney-server:
         container_name: chutney-server
-        image: ghcr.io/chutney-testing/chutney/server:latest
+        image: ghcr.io/chutney-testing/chutney/chutney-server:latest
         restart: unless-stopped
         ports:
             - "8081:8443"
         volumes:
             - ./chutney_environments:/.chutney
-    chutney-ui:
-        container_name: chutney-ui
-        image: ghcr.io/chutney-testing/chutney/ui:latest
-        restart: unless-stopped
-        ports:
-            - "80:80"
-            - "443:443"

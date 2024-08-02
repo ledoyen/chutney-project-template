@@ -15,30 +15,51 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <kotlin.version>1.8.22</kotlin.version>
+        <kotlin.compiler.languageVersion>1.9</kotlin.compiler.languageVersion>
+        <kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion>
+        <kotlin.compiler.jvmTarget>${maven.compiler.target}</kotlin.compiler.jvmTarget>
 
-        <chutney-kotlin-dsl.version>[2.0.0,)</chutney-kotlin-dsl.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
-
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <kotlin.version>1.9.25</kotlin.version>
+        <chutney.version>2.9.0</chutney.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-bom</artifactId>
+                <version>${kotlin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.chutneytesting</groupId>
+                <artifactId>chutney-parent</artifactId>
+                <version>${chutney.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.chutneytesting</groupId>
+                <artifactId>chutney-kotlin-dsl</artifactId>
+                <version>${chutney.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.chutneytesting</groupId>
             <artifactId>chutney-kotlin-dsl</artifactId>
-            <version>${chutney-kotlin-dsl.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -47,27 +68,6 @@
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <chutney.environment.rootPath>chutney_environments</chutney.environment.rootPath>
-                            <chutney.report.rootPath>target/chutney/reports</chutney.report.rootPath>
-                        </systemPropertyVariables>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M7</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -89,36 +89,17 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
-                    <includes>
-                        <include>**/*Test.*</include>
-                    </includes>
-                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                    <systemProperties>
-                        <chutney.environment.rootPath>${project.basedir}/chutney_environments</chutney.environment.rootPath>
+                    <systemPropertyVariables>
+                        <chutney.environment.rootPath>${project.basedir}/chutney/conf/environment</chutney.environment.rootPath>
                         <chutney.report.rootPath>${project.build.directory}/chutney-reports</chutney.report.rootPath>
                         <chutney.engine.stepAsTest>false</chutney.engine.stepAsTest>
                         <chutney.log.color.enabled>true</chutney.log.color.enabled>
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit-jupiter.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
 </project>
-
